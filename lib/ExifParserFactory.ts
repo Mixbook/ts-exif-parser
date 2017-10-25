@@ -5,14 +5,14 @@ function getGlobal() {
 }
 
 export class ExifParserFactory {
-  public static create(buffer: Buffer, global?: any) {
+  public static create(buffer: Buffer | ArrayBuffer, global?: any) {
     global = global || getGlobal();
     if (buffer instanceof global.ArrayBuffer) {
-      const DOMBufferStream = require('./DOMBufferStream');
-      return new ExifParser(new DOMBufferStream(buffer, 0, buffer.byteLength, true, global));
+      const DOMBufferStream = require('./DOMBufferStream').DOMBufferStream;
+      return new ExifParser(new DOMBufferStream(buffer, 0, (buffer as ArrayBuffer).byteLength, true, global));
     } else {
       const NodeBufferStream = require('./BufferStream').BufferStream;
-      return new ExifParser(new NodeBufferStream(buffer, 0, buffer.length, true));
+      return new ExifParser(new NodeBufferStream(buffer, 0, (buffer as Buffer).length, true));
     }
   }
 }
